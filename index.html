@@ -394,6 +394,129 @@
   .link-box.show { display: block; }
 
   /* ============================= */
+  /* CREDIT / SOCIAL / CUSTOMIZE     */
+  /* ============================= */
+  .credit-text {
+    margin-top: 22px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #8a2f4f;
+    opacity: 0.85;
+  }
+
+  .social-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .social-label {
+    font-size: 13px;
+    color: #7a3350;
+    opacity: 0.85;
+    font-weight: 500;
+  }
+
+  .instagram-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #d6336c;
+    font-weight: 600;
+    font-size: 13.5px;
+    text-decoration: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .instagram-link:hover { transform: translateY(-1px); opacity: 0.85; }
+
+  .instagram-icon { width: 17px; height: 17px; color: #d6336c; flex-shrink: 0; }
+
+  .email-link {
+    color: #d6336c;
+    font-weight: 600;
+    font-size: 13.5px;
+    text-decoration: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .email-link:hover { transform: translateY(-1px); opacity: 0.85; }
+
+  .customize-link {
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    padding: 12px 18px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.5);
+    color: #8a2f4f;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  }
+
+  .customize-link:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.1);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 14px;
+    padding: 8px 16px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.5);
+    color: #8a2f4f;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, background 0.2s ease;
+    align-self: flex-start;
+  }
+
+  .back-link:hover { transform: translateY(-1px); background: rgba(255,255,255,0.7); }
+
+  .custom-paragraph {
+    font-size: 14.5px;
+    color: #6a2a45;
+    line-height: 1.65;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+
+  .examples-card { margin-bottom: 18px; text-align: left; }
+
+  .contact-card { text-align: center; }
+
+  .examples-heading {
+    font-size: 15px;
+    font-weight: 700;
+    color: #7a1f3d;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .example-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .example-list li {
+    font-size: 14px;
+    color: #6a2a45;
+    background: rgba(255,255,255,0.5);
+    border-radius: 14px;
+    padding: 9px 14px;
+  }
+
+  /* ============================= */
   /* RESPONSIVE TWEAKS               */
   /* ============================= */
   @media (max-width: 400px) {
@@ -427,17 +550,17 @@
 
     <div class="field">
       <label for="theirName">Their Name</label>
-      <input type="text" id="theirName" placeholder="e.g. Swetaa">
+      <input type="text" id="theirName" placeholder="Type here">
     </div>
 
     <div class="field">
       <label for="yourName">Your Name</label>
-      <input type="text" id="yourName" placeholder="e.g. Vivek">
+      <input type="text" id="yourName" placeholder="Type here">
     </div>
 
     <div class="field">
       <label for="message">Message</label>
-      <textarea id="message" placeholder="Write something from the heart..."></textarea>
+      <textarea id="message" placeholder="Write your lovely message..."></textarea>
     </div>
 
     <button class="btn-primary" id="previewBtn">Preview My Proposal ❤️</button>
@@ -483,6 +606,80 @@
 
     <button class="btn-primary" id="shareBtn">Get Share Link ✨</button>
     <div class="link-box" id="linkBox"></div>
+
+    <div class="credit-text">Built by Vivek Sahani ❤️</div>
+
+    <div class="social-row">
+      <span class="social-label">Follow on Instagram</span>
+      <a href="https://www.instagram.com/vk_vivek_sah?igsh=MWpheHg5Ym9hM3IyZA==" target="_blank" rel="noopener noreferrer" class="instagram-link">
+        <svg class="instagram-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/>
+        </svg>
+        <span>@vk_vivek_sah</span>
+      </a>
+    </div>
+
+    <button class="customize-link" id="customizeLinkBtn">👉 Customize Personal App Here</button>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- PAGE 4 — CUSTOMIZE PERSONAL APP                            -->
+<!-- ======================================================= -->
+<div id="page4" class="page">
+  <div class="glass-card">
+    <button class="back-link" id="backFromCustomizeBtn">← Back</button>
+
+    <h1 class="big-heading">Build Your Own Personalized Web App ✨</h1>
+
+    <p class="custom-paragraph">
+      Every special moment deserves something unique. Whether it's a romantic proposal, birthday surprise, anniversary greeting, friendship page, apology page, wedding invitation, farewell card, congratulations page, baby welcome page, festival greeting, business landing page, portfolio, digital invitation, or any custom web experience—you can get it designed exactly the way you imagine.
+    </p>
+
+    <p class="custom-paragraph">
+      Just share your idea and your preferred design. A completely personalized web app can be created according to your needs with beautiful animations, shareable links, mobile-friendly design, and modern UI.
+    </p>
+
+    <div class="inner-card examples-card">
+      <div class="examples-heading">Example Ideas</div>
+      <ul class="example-list">
+        <li>Birthday Wishes Website 🎂</li>
+        <li>Anniversary Surprise ❤️</li>
+        <li>Proposal Website 💍</li>
+        <li>Wedding Invitation 💒</li>
+        <li>Friendship Page 🤝</li>
+        <li>Sorry / Apology Page 🥺</li>
+        <li>Congratulations Page 🎉</li>
+        <li>Festival Greeting ✨</li>
+        <li>Baby Welcome Page 👶</li>
+        <li>Business Landing Page 💼</li>
+        <li>Portfolio Website 🌐</li>
+        <li>Any Custom Web App You Imagine 🚀</li>
+      </ul>
+    </div>
+
+    <div class="inner-card contact-card">
+      <div class="examples-heading">Need Your Own Custom Web App?</div>
+
+      <div class="social-row">
+        <span class="social-label">Instagram</span>
+        <a href="https://www.instagram.com/vk_vivek_sah?igsh=MWpheHg5Ym9hM3IyZA==" target="_blank" rel="noopener noreferrer" class="instagram-link">
+          <svg class="instagram-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="currentColor" stroke-width="1.6"/>
+            <circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="1.6"/>
+            <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/>
+          </svg>
+          <span>@vk_vivek_sah</span>
+        </a>
+      </div>
+
+      <div class="social-row">
+        <span class="social-label">Email</span>
+        <a href="mailto:viveksahani726704@gmail.com" class="email-link">viveksahani726704@gmail.com</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -508,160 +705,7 @@
 
 /* ---------------------------------------------------------------------
    1. FLOATING HEARTS BACKGROUND
-   Continuously spawns heart emojis that float upward and fade out.
---------------------------------------------------------------------- */
-(function floatingHearts() {
-  const container = document.getElementById('heartsContainer');
-  const emojis = ['💖', '💕', '❤️', '💗', '💞', '😘'];
-
-  function spawnHeart() {
-    const heart = document.createElement('div');
-    heart.className = 'floating-heart';
-    heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-
-    const startLeft = Math.random() * 100; // vw
-    const duration = 6 + Math.random() * 6; // 6s - 12s
-    const size = 16 + Math.random() * 18; // px
-
-    heart.style.left = startLeft + 'vw';
-    heart.style.fontSize = size + 'px';
-    heart.style.animationDuration = duration + 's';
-
-    container.appendChild(heart);
-
-    // Clean up after the animation finishes so DOM doesn't grow forever
-    setTimeout(() => heart.remove(), duration * 1000 + 200);
-  }
-
-  // Spawn a new heart at a steady rhythm
-  setInterval(spawnHeart, 500);
-  // Seed a few immediately so the page doesn't feel empty on load
-  for (let i = 0; i < 6; i++) setTimeout(spawnHeart, i * 250);
-})();
-
-/* ---------------------------------------------------------------------
-   2. STORAGE + URL HELPERS
---------------------------------------------------------------------- */
-const STORAGE_KEY = 'proposalBuilderData';
-
-const defaultData = {
-  theirName: 'Swetaa',
-  yourName: 'Vivek',
-  message: 'I love you 😘😘💕💖💞 maidam jiii ❣❣😘'
-};
-
-// Unicode-safe Base64 encode/decode (emojis need this, plain btoa/atob choke on them)
-function b64Encode(str) {
-  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-    (_, p1) => String.fromCharCode('0x' + p1)));
-}
-
-function b64Decode(str) {
-  return decodeURIComponent(
-    Array.prototype.map.call(atob(str), c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
-  );
-}
-
-function loadBuilderData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch (e) { /* ignore corrupt storage */ }
-  return { ...defaultData };
-}
-
-function saveBuilderData(data) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch (e) { /* storage may be unavailable, fail silently */ }
-}
-
-// Build a shareable proposal link that encodes their name / your name / message
-function buildShareUrl(data) {
-  const encoded = b64Encode(JSON.stringify(data));
-  const url = new URL(window.location.href);
-  url.search = ''; // clear any existing params
-  url.searchParams.set('proposal', encoded);
-  return url.toString();
-}
-
-// Read a proposal payload from the URL, if present
-function readProposalFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  const encoded = params.get('proposal');
-  if (!encoded) return null;
-  try {
-    const json = b64Decode(encoded);
-    const data = JSON.parse(json);
-    if (data && data.theirName && data.yourName && data.message) return data;
-  } catch (e) { /* malformed link, ignore */ }
-  return null;
-}
-
-/* ---------------------------------------------------------------------
-   3. PAGE NAVIGATION
-   Uses history.pushState so back/forward feels native. Visibility is
-   controlled purely by toggling the `.active` class.
---------------------------------------------------------------------- */
-const pages = {
-  1: document.getElementById('page1'),
-  2: document.getElementById('page2'),
-  3: document.getElementById('page3')
-};
-
-function showPage(num, pushHistory = true) {
-  Object.values(pages).forEach(p => p.classList.remove('active'));
-  pages[num].classList.add('active');
-
-  if (pushHistory) {
-    history.pushState({ page: num }, '', window.location.pathname + window.location.search);
-  }
-
-  window.scrollTo(0, 0);
-}
-
-window.addEventListener('popstate', (e) => {
-  const num = (e.state && e.state.page) || 1;
-  showPage(num, false);
-});
-
-/* ---------------------------------------------------------------------
-   4. BUILDER PAGE LOGIC (Page 1)
-   Values persist automatically to localStorage as the user types.
---------------------------------------------------------------------- */
-const theirNameInput = document.getElementById('theirName');
-const yourNameInput = document.getElementById('yourName');
-const messageInput = document.getElementById('message');
-const previewBtn = document.getElementById('previewBtn');
-
-function populateBuilder(data) {
-  theirNameInput.value = data.theirName;
-  yourNameInput.value = data.yourName;
-  messageInput.value = data.message;
-}
-
-function currentBuilderData() {
-  return {
-    theirName: theirNameInput.value.trim() || defaultData.theirName,
-    yourName: yourNameInput.value.trim() || defaultData.yourName,
-    message: messageInput.value.trim() || defaultData.message
-  };
-}
-
-// Autosave on every keystroke
-[theirNameInput, yourNameInput, messageInput].forEach(input => {
-  input.addEventListener('input', () => saveBuilderData(currentBuilderData()));
-});
-
-previewBtn.addEventListener('click', () => {
-  const data = currentBuilderData();
-  saveBuilderData(data);
-  renderProposalPage(data);
-  showPage(2);
-});
-
-/* ---------------------------------------------------------------------
-   5. PROPOSAL PAGE LOGIC (Page 2)
+   Continu LOGIC (Page 2)
 --------------------------------------------------------------------- */
 const fromTag = document.getElementById('fromTag');
 const theirNameDisplay = document.getElementById('theirNameDisplay');
