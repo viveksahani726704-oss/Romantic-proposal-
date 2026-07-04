@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Proposal Builder 💌</title>
+
+<!-- Google Fonts: elegant serif for headings, soft sans for body -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================= */
+  /* RESET & BASE                   */
+  /* ============================= */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: auto !important; /* smooth scrolling disabled per spec */
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 35%, #ffb88c 70%, #ff8c69 100%);
+    background-attachment: fixed;
+    color: #5a2a3a;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+  button { font-family: 'Poppins', sans-serif; cursor: pointer; border: none; outline: none; }
+  input, textarea { font-family: 'Poppins', sans-serif; }
+
+  /* ============================= */
+  /* FLOATING HEARTS BACKGROUND     */
+  /* ============================= */
+  #heartsContainer {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .floating-heart {
+    position: absolute;
+    bottom: -60px;
+    font-size: 22px;
+    opacity: 0.75;
+    user-select: none;
+    animation-name: floatUp;
+    animation-timing-function: ease-in;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes floatUp {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: translateY(-50vh) translateX(20px) rotate(180deg) scale(1.1);
+      opacity: 0.9;
+    }
+    100% {
+      transform: translateY(-105vh) translateX(-15px) rotate(360deg) scale(0.8);
+      opacity: 0;
+    }
+  }
+
+  /* ============================= */
+  /* PAGE / LAYOUT                  */
+  /* ============================= */
+  .page {
+    display: none;
+    min-height: 100vh;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .page.active {
+    display: flex;
+    animation: fadeIn 0.6s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============================= */
+  /* GLASSMORPHISM CARD             */
+  /* ============================= */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 30px;
+    box-shadow: 0 15px 45px rgba(180, 60, 90, 0.25), inset 0 1px 0 rgba(255,255,255,0.5);
+    padding: 40px 32px;
+    max-width: 460px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #b23a5c;
+    font-weight: 600;
+    opacity: 0.85;
+    margin-bottom: 6px;
+  }
+
+  .big-heading {
+    font-size: 32px;
+    font-weight: 700;
+    color: #7a1f3d;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  .subtitle {
+    font-size: 14.5px;
+    color: #7a3350;
+    opacity: 0.9;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  /* ============================= */
+  /* FORM ELEMENTS                  */
+  /* ============================= */
+  .field {
+    text-align: left;
+    margin-bottom: 18px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #8a2f4f;
+    margin-bottom: 6px;
+    padding-left: 4px;
+  }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.6);
+    background: rgba(255, 255, 255, 0.55);
+    font-size: 14.5px;
+    color: #5a2a3a;
+    transition: all 0.25s ease;
+    resize: none;
+  }
+
+  .field textarea { min-height: 80px; line-height: 1.5; }
+
+  .field input:focus,
+  .field textarea:focus {
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 0 3px rgba(255, 130, 160, 0.35);
+  }
+
+  /* ============================= */
+  /* BUTTONS                        */
+  /* ============================= */
+  .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #ff5f8f, #ff8362);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(255, 95, 143, 0.45);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    margin-top: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 14px 32px rgba(255, 95, 143, 0.55);
+  }
+
+  .btn-primary:active { transform: translateY(0) scale(0.98); }
+
+  /* YES button — heartbeat pulse */
+  .btn-yes {
+    display: inline-block;
+    padding: 18px 46px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #ff4d7d, #ff8a5c);
+    color: #fff;
+    font-size: 19px;
+    font-weight: 700;
+    box-shadow: 0 12px 30px rgba(255, 77, 125, 0.5);
+    animation: heartbeat 1.4s ease-in-out infinite;
+    position: relative;
+    z-index: 5;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25%      { transform: scale(1.06); }
+    40%      { transform: scale(0.98); }
+    60%      { transform: scale(1.08); }
+  }
+
+  /* NO button — small, and will escape via JS positioning */
+  .btn-no {
+    padding: 10px 22px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.55);
+    color: #8a2f4f;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    transition: top 0.35s cubic-bezier(.34,1.56,.64,1),
+                left 0.35s cubic-bezier(.34,1.56,.64,1),
+                transform 0.2s ease;
+    position: relative;
+    z-index: 5;
+  }
+
+  .btn-no.escaping {
+    position: fixed; /* once it escapes, it roams the whole viewport */
+  }
+
+  /* Final retirement state: after a few failed attempts the NO button
+     sinks completely behind the YES button and can no longer be reached. */
+  .btn-no.hidden-behind-yes {
+    z-index: 1;
+    opacity: 0;
+    transform: scale(0.4);
+    pointer-events: none;
+    transition: top 0.35s cubic-bezier(.34,1.56,.64,1),
+                left 0.35s cubic-bezier(.34,1.56,.64,1),
+                opacity 0.3s ease,
+                transform 0.3s ease;
+  }
+
+  .btn-no:hover { transform: scale(0.96); }
+
+  .btn-choice-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 22px;
+    position: relative;
+    min-height: 60px;
+  }
+
+  /* ============================= */
+  /* PAGE 2 — PROPOSAL SPECIFIC     */
+  /* ============================= */
+  .from-tag {
+    font-size: 14px;
+    color: #8a2f4f;
+    font-weight: 600;
+    margin-bottom: 14px;
+    opacity: 0.85;
+  }
+
+  .proposal-question {
+    font-size: 30px;
+    font-weight: 700;
+    color: #7a1f3d;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .their-name {
+    font-size: 22px;
+    font-weight: 600;
+    color: #d6336c;
+    margin-bottom: 18px;
+  }
+
+  .proposal-message {
+    font-size: 16px;
+    color: #6a2a45;
+    margin-bottom: 24px;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .inner-card {
+    background: rgba(255,255,255,0.65);
+    border-radius: 24px;
+    padding: 24px 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+
+  .shhh-text {
+    font-size: 14px;
+    color: #a13a5b;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  /* ============================= */
+  /* PAGE 3 — FINAL LOVE PAGE       */
+  /* ============================= */
+  .final-heading {
+    font-size: 30px;
+    font-weight: 700;
+    color: #7a1f3d;
+    margin-bottom: 16px;
+    line-height: 1.35;
+    animation: heartbeat 1.8s ease-in-out infinite;
+  }
+
+  .final-message {
+    font-size: 15px;
+    color: #6a2a45;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .signed { display: block; margin-top: 10px; font-weight: 600; color: #d6336c; }
+
+  .kitten-wrap {
+    border-radius: 22px;
+    overflow: hidden;
+    margin: 0 auto 24px;
+    max-width: 260px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+    border: 3px solid rgba(255,255,255,0.6);
+  }
+
+  .kitten-wrap img { width: 100%; display: block; }
+
+  /* ============================= */
+  /* CONFETTI CANVAS                */
+  /* ============================= */
+  #confettiCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* ============================= */
+  /* TOAST (copy link feedback)     */
+  /* ============================= */
+  #toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(90, 30, 50, 0.92);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 16px;
+    font-size: 13.5px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.35s ease;
+    z-index: 1000;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  }
+
+  #toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ============================= */
+  /* SHARE LINK BOX                 */
+  /* ============================= */
+  .link-box {
+    margin-top: 16px;
+    font-size: 12px;
+    color: #7a3350;
+    background: rgba(255,255,255,0.5);
+    border-radius: 14px;
+    padding: 10px 14px;
+    word-break: break-all;
+    display: none;
+  }
+
+  .link-box.show { display: block; }
+
+  /* ============================= */
+  /* CREDIT / SOCIAL / CUSTOMIZE     */
+  /* ============================= */
+  .credit-text {
+    margin-top: 22px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #8a2f4f;
+    opacity: 0.85;
+  }
+
+  .social-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .social-label {
+    font-size: 13px;
+    color: #7a3350;
+    opacity: 0.85;
+    font-weight: 500;
+  }
+
+  .instagram-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #d6336c;
+    font-weight: 600;
+    font-size: 13.5px;
+    text-decoration: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .instagram-link:hover { transform: translateY(-1px); opacity: 0.85; }
+
+  .instagram-icon { width: 17px; height: 17px; color: #d6336c; flex-shrink: 0; }
+
+  .email-link {
+    color: #d6336c;
+    font-weight: 600;
+    font-size: 13.5px;
+    text-decoration: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .email-link:hover { transform: translateY(-1px); opacity: 0.85; }
+
+  .customize-link {
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    padding: 12px 18px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.5);
+    color: #8a2f4f;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  }
+
+  .customize-link:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.1);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 14px;
+    padding: 8px 16px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.5);
+    color: #8a2f4f;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, background 0.2s ease;
+    align-self: flex-start;
+  }
+
+  .back-link:hover { transform: translateY(-1px); background: rgba(255,255,255,0.7); }
+
+  .custom-paragraph {
+    font-size: 14.5px;
+    color: #6a2a45;
+    line-height: 1.65;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+
+  .examples-card { margin-bottom: 18px; text-align: left; }
+
+  .contact-card { text-align: center; }
+
+  .examples-heading {
+    font-size: 15px;
+    font-weight: 700;
+    color: #7a1f3d;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .example-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .example-list li {
+    font-size: 14px;
+    color: #6a2a45;
+    background: rgba(255,255,255,0.5);
+    border-radius: 14px;
+    padding: 9px 14px;
+  }
+
+  /* ============================= */
+  /* AD SLOTS (Adsterra)            */
+  /* Centers every ad unit and keeps */
+  /* consistent spacing so nothing   */
+  /* overlaps surrounding content.   */
+  /* ============================= */
+  .ad-slot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 25px 0;
+    overflow: hidden;
+    transition: margin 0.25s ease, min-height 0.25s ease;
+  }
+
+  /* Wrapper that receives the sandboxed ad iframe. Centers it and lets it
+     shrink responsively while never exceeding its natural ad dimensions. */
+  .ad-frame-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .ad-frame-wrap iframe {
+    border: 0;
+    display: block;
+    max-width: 100%;
+  }
+
+  /* ============================= */
+  /* RESPONSIVE TWEAKS               */
+  /* ============================= */
+  @media (max-width: 400px) {
+    .glass-card { padding: 30px 20px; border-radius: 26px; }
+    .big-heading { font-size: 26px; }
+    .proposal-question { font-size: 24px; }
+    .final-heading { font-size: 24px; }
+    .btn-yes { padding: 15px 34px; font-size: 17px; }
+  }
+
+  /* Respect reduced-motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .floating-heart, .btn-yes, .final-heading { animation: none !important; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating hearts live behind everything -->
+<div id="heartsContainer"></div>
+
+<!-- ======================================================= -->
+<!-- PAGE 1 — BUILDER                                          -->
+<!-- ======================================================= -->
+<div id="page1" class="page">
+  <div class="glass-card">
+    <div class="eyebrow">Proposal Builder 💌</div>
+    <h1 class="big-heading">Craft something unforgettable</h1>
+    <p class="subtitle">Fill in the essentials and preview your proposal before sharing it with the one who matters most.</p>
+
+    <div class="field">
+      <label for="theirName">Their Name</label>
+      <input type="text" id="theirName" placeholder="Type here">
+    </div>
+
+    <div class="field">
+      <label for="yourName">Your Name</label>
+      <input type="text" id="yourName" placeholder="Type here">
+    </div>
+
+    <div class="field">
+      <label for="message">Message</label>
+      <textarea id="message" placeholder="Write your lovely message..."></textarea>
+    </div>
+
+    <button class="btn-primary" id="previewBtn">Preview My Proposal ❤️</button>
+
+    <div class="ad-slot" style="min-height:300px;">
+      <div class="ad-frame-wrap"
+           data-ad-type="banner"
+           data-ad-key="de3838fbfe1522b7cb84f13fa0caf06c"
+           data-ad-src="https://www.highperformanceformat.com/de3838fbfe1522b7cb84f13fa0caf06c/invoke.js"
+           data-ad-width="160"
+           data-ad-height="300"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- PAGE 2 — PROPOSAL (Will you forever be mine?)             -->
+<!-- ======================================================= -->
+<div id="page2" class="page">
+  <div class="glass-card">
+    <div class="from-tag" id="fromTag">From: Vivek ❤️</div>
+    <h2 class="proposal-question">Will you forever be mine?</h2>
+    <div class="their-name" id="theirNameDisplay">Swetaa 💖</div>
+    <p class="proposal-message" id="messageDisplay">I love you 😘😘💕💖💞 maidam jiii ❣❣😘</p>
+
+    <div class="inner-card">
+      <div class="shhh-text">Shhh, this is a you-only game 😉</div>
+      <div class="btn-choice-row" id="choiceRow">
+        <button class="btn-yes" id="yesBtn">YES ❤️</button>
+        <button class="btn-no" id="noBtn">NO 🌚</button>
+      </div>
+    </div>
+
+    <div class="ad-slot" style="min-height:300px;">
+      <div class="ad-frame-wrap"
+           data-ad-type="banner"
+           data-ad-key="de3838fbfe1522b7cb84f13fa0caf06c"
+           data-ad-src="https://www.highperformanceformat.com/de3838fbfe1522b7cb84f13fa0caf06c/invoke.js"
+           data-ad-width="160"
+           data-ad-height="300"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- PAGE 3 — FINAL LOVE PAGE                                   -->
+<!-- ======================================================= -->
+<div id="page3" class="page">
+  <div class="glass-card">
+    <h1 class="final-heading">I LOVE YOU MERI JAAN 😘❤️</h1>
+
+    <div class="kitten-wrap">
+      <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" alt="cute kitten" loading="lazy">
+    </div>
+
+    <p class="final-message">
+      You're the most amazing person I know.<br>
+      I love you endlessly.
+      <span class="signed" id="signedName">— Vivek</span>
+    </p>
+
+    <button class="btn-primary" id="shareBtn">Get Share Link ✨</button>
+    <div class="link-box" id="linkBox"></div>
+
+    <div class="ad-slot" style="min-height:250px;">
+      <div class="ad-frame-wrap"
+           data-ad-type="banner"
+           data-ad-key="78dac362e4931461db17c8476cb2ea64"
+           data-ad-src="https://www.highperformanceformat.com/78dac362e4931461db17c8476cb2ea64/invoke.js"
+           data-ad-width="300"
+           data-ad-height="250"></div>
+    </div>
+
+    <button class="btn-primary" id="newProposalBtn">✨ Create Your Own Proposal</button>
+
+    <div class="credit-text">Built by Vivek Sahani ❤️</div>
+
+    <div class="social-row">
+      <span class="social-label">Follow on Instagram</span>
+      <a href="https://www.instagram.com/vk_vivek_sah?igsh=MWpheHg5Ym9hM3IyZA==" target="_blank" rel="noopener noreferrer" class="instagram-link">
+        <svg class="instagram-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/>
+        </svg>
+        <span>@vk_vivek_sah</span>
+      </a>
+    </div>
+
+    <button class="customize-link" id="customizeLinkBtn">👉 Customize Personal App Here</button>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- PAGE 4 — CUSTOMIZE PERSONAL APP                            -->
+<!-- ======================================================= -->
+<div id="page4" class="page">
+  <div class="glass-card">
+    <button class="back-link" id="backFromCustomizeBtn">← Back</button>
+
+    <h1 class="big-heading">Build Your Own Personalized Web App ✨</h1>
+
+    <p class="custom-paragraph">
+      Every special moment deserves something unique. Whether it's a romantic proposal, birthday surprise, anniversary greeting, friendship page, apology page, wedding invitation, farewell card, congratulations page, baby welcome page, festival greeting, business landing page, portfolio, digital invitation, or any custom web experience—you can get it designed exactly the way you imagine.
+    </p>
+
+    <p class="custom-paragraph">
+      Just share your idea and your preferred design. A completely personalized web app can be created according to your needs with beautiful animations, shareable links, mobile-friendly design, and modern UI.
+    </p>
+
+    <div class="ad-slot" style="min-height:100px;">
+      <div class="ad-frame-wrap"
+           data-ad-type="native"
+           data-ad-container-id="container-8ead0b7d9170f165528e483b72e217c1"
+           data-ad-src="https://pl30197597.effectivecpmnetwork.com/8ead0b7d9170f165528e483b72e217c1/invoke.js"
+           data-ad-width="320"
+           data-ad-height="100"></div>
+    </div>
+
+    <div class="inner-card examples-card">
+      <div class="examples-heading">Example Ideas</div>
+      <ul class="example-list">
+        <li>Birthday Wishes Website 🎂</li>
+        <li>Anniversary Surprise ❤️</li>
+        <li>Proposal Website 💍</li>
+        <li>Wedding Invitation 💒</li>
+        <li>Friendship Page 🤝</li>
+        <li>Sorry / Apology Page 🥺</li>
+        <li>Congratulations Page 🎉</li>
+        <li>Festival Greeting ✨</li>
+        <li>Baby Welcome Page 👶</li>
+        <li>Business Landing Page 💼</li>
+        <li>Portfolio Website 🌐</li>
+        <li>Any Custom Web App You Imagine 🚀</li>
+      </ul>
+    </div>
+
+    <div class="ad-slot" style="min-height:250px;">
+      <div class="ad-frame-wrap"
+           data-ad-type="banner"
+           data-ad-key="78dac362e4931461db17c8476cb2ea64"
+           data-ad-src="https://www.highperformanceformat.com/78dac362e4931461db17c8476cb2ea64/invoke.js"
+           data-ad-width="300"
+           data-ad-height="250"></div>
+    </div>
+
+    <div class="ad-slot" style="min-height:300px;">
+      <div class="ad-frame-wrap"
+           data-ad-type="banner"
+           data-ad-key="de3838fbfe1522b7cb84f13fa0caf06c"
+           data-ad-src="https://www.highperformanceformat.com/de3838fbfe1522b7cb84f13fa0caf06c/invoke.js"
+           data-ad-width="160"
+           data-ad-height="300"></div>
+    </div>
+
+    <div class="inner-card contact-card">
+      <div class="examples-heading">Need Your Own Custom Web App?</div>
+
+      <div class="social-row">
+        <span class="social-label">Instagram</span>
+        <a href="https://www.instagram.com/vk_vivek_sah?igsh=MWpheHg5Ym9hM3IyZA==" target="_blank" rel="noopener noreferrer" class="instagram-link">
+          <svg class="instagram-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="currentColor" stroke-width="1.6"/>
+            <circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="1.6"/>
+            <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/>
+          </svg>
+          <span>@vk_vivek_sah</span>
+        </a>
+      </div>
+
+      <div class="social-row">
+        <span class="social-label">Email</span>
+        <a href="mailto:viveksahani726704@gmail.com" class="email-link">viveksahani726704@gmail.com</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confetti canvas overlay -->
+<canvas id="confettiCanvas"></canvas>
+
+<!-- Toast for copy feedback -->
+<div id="toast"></div>
+
+<script>
+/* =====================================================================
+   PROPOSAL WEBSITE — SINGLE FILE APP
+   Sections:
+   1. Floating hearts background
+   2. Storage + URL helpers (localStorage, Base64 encode/decode)
+   3. Page navigation (with history.pushState)
+   4. Builder page logic (autosave)
+   5. Proposal page logic (escaping NO button, YES -> confetti -> page3)
+   6. Final page logic (share link generation)
+   7. Confetti animation
+   8. Init / routing on load
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   1. FLOATING HEARTS BACKGROUND
+   Continuously spawns heart emojis that float upward and fade out.
+--------------------------------------------------------------------- */
+(function floatingHearts() {
+  const container = document.getElementById('heartsContainer');
+  const emojis = ['💖', '💕', '❤️', '💗', '💞', '😘'];
+
+  function spawnHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'floating-heart';
+    heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+    const startLeft = Math.random() * 100; // vw
+    const duration = 6 + Math.random() * 6; // 6s - 12s
+    const size = 16 + Math.random() * 18; // px
+
+    heart.style.left = startLeft + 'vw';
+    heart.style.fontSize = size + 'px';
+    heart.style.animationDuration = duration + 's';
+
+    container.appendChild(heart);
+
+    // Clean up after the animation finishes so DOM doesn't grow forever
+    setTimeout(() => heart.remove(), duration * 1000 + 200);
+  }
+
+  // Spawn a new heart at a steady rhythm
+  setInterval(spawnHeart, 500);
+  // Seed a few immediately so the page doesn't feel empty on load
+  for (let i = 0; i < 6; i++) setTimeout(spawnHeart, i * 250);
+})();
+
+/* ---------------------------------------------------------------------
+   2. STORAGE + URL HELPERS
+--------------------------------------------------------------------- */
+const STORAGE_KEY = 'proposalBuilderData';
+
+const defaultData = {
+  theirName: '',
+  yourName: '',
+  message: ''
+};
+
+// Unicode-safe Base64 encode/decode (emojis need this, plain btoa/atob choke on them)
+function b64Encode(str) {
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+    (_, p1) => String.fromCharCode('0x' + p1)));
+}
+
+function b64Decode(str) {
+  return decodeURIComponent(
+    Array.prototype.map.call(atob(str), c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
+  );
+}
+
+function loadBuilderData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) { /* ignore corrupt storage */ }
+  return { ...defaultData };
+}
+
+function saveBuilderData(data) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) { /* storage may be unavailable, fail silently */ }
+}
+
+// Build a shareable proposal link that encodes their name / your name / message
+function buildShareUrl(data) {
+  const encoded = b64Encode(JSON.stringify(data));
+  const url = new URL(window.location.href);
+  url.search = ''; // clear any existing params
+  url.searchParams.set('proposal', encoded);
+  return url.toString();
+}
+
+// Read a proposal payload from the URL, if present
+function readProposalFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const encoded = params.get('proposal');
+  if (!encoded) return null;
+  try {
+    const json = b64Decode(encoded);
+    const data = JSON.parse(json);
+    if (data && data.theirName && data.yourName && data.message) return data;
+  } catch (e) { /* malformed link, ignore */ }
+  return null;
+}
+
+/* ---------------------------------------------------------------------
+   2b. ADSTERRA AD LOADER
+   Every ad now lives inside its own sandboxed iframe (built with
+   `srcdoc`), and is only requested once the page it belongs to actually
+   becomes visible. This fixes three problems with the old inline
+   approach:
+     - Ads sitting on hidden (display:none) pages used to fire the moment
+       the document parsed, which many networks treat as an invalid /
+       zero-size impression and simply return nothing for -> blank slot.
+     - Multiple ad units on the page shared one global `atOptions`
+       variable, so whichever script ran last could clobber the config
+       another unit's invoke.js was about to read -> duplicate load
+       conflicts. Each iframe now gets its own isolated window, so
+       `atOptions` can never collide between units.
+     - No explicit, matching width/height meant layout jumped around;
+       every wrapper now gets the exact ad size, and if nothing fills
+       within a grace period the whole slot collapses to zero height so
+       there's no dead blank space left in the layout.
+--------------------------------------------------------------------- */
+function buildAdIframeDoc(wrap, width, height) {
+  const type = wrap.dataset.adType;
+
+  if (type === 'native') {
+    const containerId = wrap.dataset.adContainerId;
+    const src = wrap.dataset.adSrc;
+    return `<!DOCTYPE html><html><head><meta charset="utf-8">
+      <style>html,body{margin:0;padding:0;background:transparent;overflow:hidden;}</style>
+      </head><body>
+      <div id="${containerId}"></div>
+      <script async data-cfasync="false" src="${src}"><\/script>
+      </body></html>`;
+  }
+
+  // default: 'banner' (Adsterra "iframe" format driven by atOptions)
+  const key = wrap.dataset.adKey;
+  const src = wrap.dataset.adSrc;
+  return `<!DOCTYPE html><html><head><meta charset="utf-8">
+    <style>html,body{margin:0;padding:0;background:transparent;display:flex;
+    align-items:center;justify-content:center;overflow:hidden;}</style>
+    </head><body>
+    <script>
+      atOptions = { 'key':'${key}', 'format':'iframe', 'height':${height}, 'width':${width}, 'params':{} };
+    <\/script>
+    <script src="${src}"><\/script>
+    </body></html>`;
+}
+
+function loadAdSlot(wrap) {
+  if (!wrap || wrap.dataset.adLoaded === 'true') return;
+  wrap.dataset.adLoaded = 'true';
+
+  const slot = wrap.closest('.ad-slot');
+  const width = parseInt(wrap.dataset.adWidth, 10) || 300;
+  const height = parseInt(wrap.dataset.adHeight, 10) || 250;
+
+  const iframe = document.createElement('iframe');
+  iframe.setAttribute('scrolling', 'no');
+  iframe.setAttribute('frameborder', '0');
+  iframe.setAttribute('title', 'Advertisement');
+  iframe.style.width = width + 'px';
+  iframe.style.height = height + 'px';
+  iframe.srcdoc = buildAdIframeDoc(wrap, width, height);
+
+  wrap.appendChild(iframe);
+
+  // Grace period for the ad network to fill; collapse the slot if it never does.
+  setTimeout(() => {
+    let filled = true; // assume filled unless we can prove otherwise
+    try {
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      filled = !!(doc && doc.body && doc.body.innerHTML.trim().length > 0);
+    } catch (e) {
+      // Cross-origin content was injected — the ad genuinely loaded.
+      filled = true;
+    }
+    if (!filled && slot) {
+      slot.style.minHeight = '0';
+      slot.style.margin = '0';
+      slot.style.height = '0';
+      slot.style.overflow = 'hidden';
+    }
+  }, 4000);
+}
+
+// Loads every ad belonging to a page the first time that page is shown.
+function loadAdsForPage(pageEl) {
+  if (!pageEl) return;
+  pageEl.querySelectorAll('.ad-frame-wrap').forEach(loadAdSlot);
+}
+
+/* ---------------------------------------------------------------------
+   3. PAGE NAVIGATION
+   Uses history.pushState so back/forward feels native. Visibility is
+   controlled purely by toggling the `.active` class.
+--------------------------------------------------------------------- */
+const pages = {
+  1: document.getElementById('page1'),
+  2: document.getElementById('page2'),
+  3: document.getElementById('page3'),
+  4: document.getElementById('page4')
+};
+
+function showPage(num, pushHistory = true) {
+  Object.values(pages).forEach(p => p.classList.remove('active'));
+  pages[num].classList.add('active');
+
+  if (pushHistory) {
+    history.pushState({ page: num }, '', window.location.pathname + window.location.search);
+  }
+
+  // Load this page's ads now that it's actually visible (only happens once per slot).
+  loadAdsForPage(pages[num]);
+
+  window.scrollTo(0, 0);
+}
+
+window.addEventListener('popstate', (e) => {
+  const num = (e.state && e.state.page) || 1;
+  showPage(num, false);
+});
+
+/* ---------------------------------------------------------------------
+   4. BUILDER PAGE LOGIC (Page 1)
+   Values persist automatically to localStorage as the user types.
+--------------------------------------------------------------------- */
+const theirNameInput = document.getElementById('theirName');
+const yourNameInput = document.getElementById('yourName');
+const messageInput = document.getElementById('message');
+const previewBtn = document.getElementById('previewBtn');
+
+function populateBuilder(data) {
+  theirNameInput.value = data.theirName;
+  yourNameInput.value = data.yourName;
+  messageInput.value = data.message;
+}
+
+function currentBuilderData() {
+  return {
+    theirName: theirNameInput.value.trim() || defaultData.theirName,
+    yourName: yourNameInput.value.trim() || defaultData.yourName,
+    message: messageInput.value.trim() || defaultData.message
+  };
+}
+
+// Autosave on every keystroke
+[theirNameInput, yourNameInput, messageInput].forEach(input => {
+  input.addEventListener('input', () => saveBuilderData(currentBuilderData()));
+});
+
+previewBtn.addEventListener('click', () => {
+  const data = currentBuilderData();
+  saveBuilderData(data);
+  renderProposalPage(data);
+  showPage(2);
+});
+
+/* ---------------------------------------------------------------------
+   5. PROPOSAL PAGE LOGIC (Page 2)
+--------------------------------------------------------------------- */
+const fromTag = document.getElementById('fromTag');
+const theirNameDisplay = document.getElementById('theirNameDisplay');
+const messageDisplay = document.getElementById('messageDisplay');
+const yesBtn = document.getElementById('yesBtn');
+const noBtn = document.getElementById('noBtn');
+const choiceRow = document.getElementById('choiceRow');
+
+let activeData = { ...defaultData }; // whatever data is currently being shown on page 2/3
+
+function renderProposalPage(data) {
+  activeData = data;
+  fromTag.textContent = `From: ${data.yourName} ❤️`;
+  theirNameDisplay.textContent = `${data.theirName} 💖`;
+  messageDisplay.textContent = data.message;
+  resetNoButton();
+  renderFinalPage(data);
+}
+
+// After this many attempts to catch it, NO retires for good behind YES.
+const NO_BUTTON_RETIRE_AFTER = 4;
+let noAttempts = 0;
+
+// Reset NO button to its natural inline position (used each time page 2 is shown)
+function resetNoButton() {
+  noAttempts = 0;
+  noBtn.classList.remove('escaping', 'hidden-behind-yes');
+  noBtn.style.top = '';
+  noBtn.style.left = '';
+}
+
+// Pure positioning logic — moves NO to a random spot, clear of YES.
+// (Unchanged from the original escape animation.)
+function repositionEscapedNoButton() {
+  const margin = 20;
+  const btnRect = noBtn.getBoundingClientRect();
+  const yesRect = yesBtn.getBoundingClientRect();
+
+  const maxLeft = window.innerWidth - btnRect.width - margin;
+  const maxTop = window.innerHeight - btnRect.height - margin;
+
+  let newLeft, newTop, tooCloseToYes;
+  let attempts = 0;
+
+  do {
+    newLeft = margin + Math.random() * Math.max(1, (maxLeft - margin));
+    newTop = margin + Math.random() * Math.max(1, (maxTop - margin));
+
+    // Keep a safe distance from the YES button so NO never overlaps it
+    const dx = (newLeft + btnRect.width / 2) - (yesRect.left + yesRect.width / 2);
+    const dy = (newTop + btnRect.height / 2) - (yesRect.top + yesRect.height / 2);
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    tooCloseToYes = distance < 140;
+    attempts++;
+  } while (tooCloseToYes && attempts < 12);
+
+  noBtn.style.left = newLeft + 'px';
+  noBtn.style.top = newTop + 'px';
+}
+
+// Once the person has failed enough times, NO sinks completely behind YES —
+// same position, lower z-index, no pointer events, invisible — so YES stays
+// the only clickable, visible option.
+function retireNoButton() {
+  noBtn.classList.add('escaping', 'hidden-behind-yes');
+
+  const yesRect = yesBtn.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
+
+  const targetLeft = yesRect.left + (yesRect.width - btnRect.width) / 2;
+  const targetTop = yesRect.top + (yesRect.height - btnRect.height) / 2;
+
+  noBtn.style.left = targetLeft + 'px';
+  noBtn.style.top = targetTop + 'px';
+}
+
+// The NO button escapes the moment the pointer gets near it.
+// We listen on hover AND click/touch so it can never actually be pressed.
+function escapeNoButton() {
+  if (noBtn.classList.contains('hidden-behind-yes')) return; // already retired
+
+  noAttempts++;
+
+  if (noAttempts >= NO_BUTTON_RETIRE_AFTER) {
+    retireNoButton();
+    return;
+  }
+
+  noBtn.classList.add('escaping');
+  repositionEscapedNoButton();
+}
+
+// Any attempt to interact with NO makes it flee — mouse, touch, or focus
+['mouseenter', 'mousedown', 'touchstart', 'focus', 'click'].forEach(evt => {
+  noBtn.addEventListener(evt, (e) => {
+    e.preventDefault();
+    escapeNoButton();
+  });
+});
+
+// Also nudge it away on scroll/resize so it never gets trapped in a corner
+// (repositioning only — resizing never counts as a new "attempt")
+window.addEventListener('resize', () => {
+  if (noBtn.classList.contains('hidden-behind-yes')) {
+    retireNoButton();
+  } else if (noBtn.classList.contains('escaping')) {
+    repositionEscapedNoButton();
+  }
+});
+
+yesBtn.addEventListener('click', () => {
+  fireConfetti();
+  setTimeout(() => showPage(3), 400); // small delay so confetti is visible before transition
+});
+
+/* ---------------------------------------------------------------------
+   6. FINAL PAGE LOGIC (Page 3)
+--------------------------------------------------------------------- */
+const signedName = document.getElementById('signedName');
+const shareBtn = document.getElementById('shareBtn');
+const linkBox = document.getElementById('linkBox');
+const toast = document.getElementById('toast');
+
+function renderFinalPage(data) {
+  signedName.textContent = `— ${data.yourName}`;
+}
+
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2400);
+}
+
+shareBtn.addEventListener('click', async () => {
+  const url = buildShareUrl(activeData);
+
+  // Try native share sheet first (great on mobile)
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'Will you forever be mine?',
+        text: `${activeData.yourName} has something to ask you 💌`,
+        url
+      });
+      return;
+    } catch (err) {
+      // user cancelled the share sheet or it failed — fall through to clipboard
+    }
+  }
+
+  // Fallback: copy to clipboard
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast('Link copied to clipboard! 💕');
+  } catch (err) {
+    // Final fallback: just reveal the link box for manual copy
+    showToast('Copy the link below 👇');
+  }
+
+  linkBox.textContent = url;
+  linkBox.classList.add('show');
+});
+
+// Chain sharing (A -> B -> C -> D ...): lets whoever received a proposal
+// wipe the current one and build a brand new one of their own.
+const newProposalBtn = document.getElementById('newProposalBtn');
+
+newProposalBtn.addEventListener('click', () => {
+  // 1. Clear any saved proposal data from localStorage
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) { /* storage may be unavailable, fail silently */ }
+
+  // 2. Strip the ?proposal=... URL parameter so this device's URL is clean
+  history.replaceState({ page: 1 }, '', window.location.pathname);
+
+  // 3. Reset in-memory state and empty the builder fields (placeholders show through)
+  activeData = { ...defaultData };
+  populateBuilder({ theirName: '', yourName: '', message: '' });
+
+  // 4. Open the Builder page fresh, ready for a brand new proposal
+  showPage(1);
+});
+
+// Navigate to the "Customize Personal App" page and back, same page-flow pattern as the rest of the site
+const customizeLinkBtn = document.getElementById('customizeLinkBtn');
+const backFromCustomizeBtn = document.getElementById('backFromCustomizeBtn');
+
+customizeLinkBtn.addEventListener('click', () => showPage(4));
+backFromCustomizeBtn.addEventListener('click', () => showPage(3));
+
+/* ---------------------------------------------------------------------
+   7. CONFETTI ANIMATION
+   Lightweight canvas confetti — no external libraries.
+--------------------------------------------------------------------- */
+const confettiCanvas = document.getElementById('confettiCanvas');
+const ctx = confettiCanvas.getContext('2d');
+let confettiParticles = [];
+let confettiRunning = false;
+
+function resizeCanvas() {
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const confettiColors = ['#ff5f8f', '#ff8362', '#ffd166', '#ff6b9d', '#ffffff', '#ff9a9e'];
+
+function createParticle() {
+  return {
+    x: Math.random() * confettiCanvas.width,
+    y: -20 - Math.random() * 100,
+    size: 6 + Math.random() * 6,
+    color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+    speedY: 2 + Math.random() * 3,
+    speedX: (Math.random() - 0.5) * 3,
+    rotation: Math.random() * 360,
+    rotationSpeed: (Math.random() - 0.5) * 10,
+    shape: Math.random() > 0.5 ? 'rect' : 'circle'
+  };
+}
+
+function fireConfetti() {
+  confettiParticles = confettiParticles.concat(
+    Array.from({ length: 120 }, createParticle)
+  );
+
+  if (!confettiRunning) {
+    confettiRunning = true;
+    requestAnimationFrame(animateConfetti);
+  }
+
+  // Stop spawning influence after 3.5s (particles finish falling naturally)
+  setTimeout(() => { confettiRunning = false; }, 3500);
+}
+
+function animateConfetti() {
+  ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+  confettiParticles.forEach(p => {
+    p.y += p.speedY;
+    p.x += p.speedX;
+    p.rotation += p.rotationSpeed;
+
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate((p.rotation * Math.PI) / 180);
+    ctx.fillStyle = p.color;
+
+    if (p.shape === 'rect') {
+      ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+    } else {
+      ctx.beginPath();
+      ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  });
+
+  // Remove particles that have fallen off screen
+  confettiParticles = confettiParticles.filter(p => p.y < confettiCanvas.height + 30);
+
+  if (confettiParticles.length > 0 || confettiRunning) {
+    requestAnimationFrame(animateConfetti);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   8. INIT / ROUTING
+   - If the URL contains a `proposal` payload, skip the builder entirely
+     and land directly on Page 2 (this is what shared links do).
+   - Otherwise, load saved builder data (or defaults) into Page 1.
+--------------------------------------------------------------------- */
+(function init() {
+  const sharedData = readProposalFromUrl();
+
+  if (sharedData) {
+    // Shared link flow: go straight to the proposal question
+    renderProposalPage(sharedData);
+    showPage(2, false);
+    history.replaceState({ page: 2 }, '', window.location.pathname + window.location.search);
+  } else {
+    // Normal flow: show the builder, pre-filled from localStorage
+    const data = loadBuilderData();
+    populateBuilder(data);
+    showPage(1, false);
+    history.replaceState({ page: 1 }, '', window.location.pathname);
+  }
+})();
+</script>
+</body>
+</html>
